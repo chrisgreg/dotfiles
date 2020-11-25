@@ -29,9 +29,18 @@ Plug 'megantiu/true.vim'
 Plug 'jordwalke/vim-taste'
 Plug 'alvan/vim-closetag'
 Plug 'relastle/bluewery.vim'
+Plug 'arzg/vim-colors-xcode'
 Plug 'mxw/vim-jsx'
+Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
+Plug 'vim-test/vim-test'
+Plug 'evanleck/vim-svelte', {'branch': 'main'}
+Plug 'https://github.com/skanehira/preview-markdown.vim'
 
 call plug#end()
+
+let g:prettier#autoformat = 0
+autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue PrettierAsync
 
 let g:lightline = { 'colorscheme': 'solarized'}
 let g:lightline = {
@@ -46,23 +55,15 @@ endfunction
 
 " Colour Scheme
 syntax enable
-"set background=dark
-" colorscheme substrata
-      
-" enable 24bit true color
- if (has("termguicolors"))
-   set termguicolors
- endif
-
-" for pairing
 set background=dark
 set bg=dark
-" colorscheme PaperColor
-" colorscheme gotham256
-" colorscheme true
-" colorscheme taste
+colorscheme xcodedark
+      
+" enable 24bit true color
+if (has("termguicolors"))
+ set termguicolors
+endif
 
- colorscheme bluewery
 let g:lightline = { 'colorscheme': 'bluewery' }
 
 noremap <C-p> :Files<cr>
@@ -89,7 +90,6 @@ set incsearch
 set nocompatible
 set ttyfast
 
-
 " Infinite Undo
 silent !mkdir -p ~/.vim/undo
 set undofile
@@ -101,9 +101,14 @@ call map(s:undos, 'delete(v:val)')
 " Elixir settings
 let g:mix_format_on_save=1
 
+" Vim Test
+nmap <silent> t<C-n> :TestNearest<CR>
+nmap <silent> t<C-f> :TestFile<CR>
+
 " Nerd tree map to Ctrl+t
 map <C-t> :NERDTreeToggle<CR>
 
+" Use Rust grep
 nmap <Space> :Rg 
 
 imap  <Leader>f <Plug>(easymotion-bd-f)
@@ -111,3 +116,9 @@ nmap <Leader>f <Plug>(easymotion-overwin-f)
 
 :iabbrev <// </<C-X><C-O>
 
+" Enable syntax highlight for Typescript
+augroup SyntaxSettings
+    autocmd!
+    autocmd BufNewFile,BufRead *.tsx set filetype=typescript
+    autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescript.jsx
+augroup END
